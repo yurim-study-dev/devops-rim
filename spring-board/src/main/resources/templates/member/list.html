@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 목록</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+  <div class="container">
+    <th:block th:replace="~{layout/common :: nav-header('회원 목록')}">
+      <h1>회원 목록</h1>
+      <div class="nav">
+        <a href="register" class="btn">회원가입</a>
+        <a href="login" class="btn btn-secondary">로그인</a>
+      </div>
+    </th:block>
+
+    <table>
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>아이디</th>
+          <th>이메일</th>
+          <th>권한</th>
+          <th>가입일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 수강생 실습: 동적 데이터 바인딩 영역 -->
+        <tr th:each="member : ${members}">
+          <td th:text="${member.id}">1</td>
+          <td><a th:href="@{edit(id=${member.id})}" th:text="${member.username}">haru</a></td>
+          <td th:text="${member.email}">user1@example.com</td>
+          <td th:text="${member.role}">user</td>
+          <td th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2026-07-16 12:00:00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <span class="disabled">&laquo; 이전</span>
+      <a href="#" class="active">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <a href="#">5</a>
+      <a href="#">다음 &raquo;</a>
+    </div>
+  </div>
+</body>
+</html>

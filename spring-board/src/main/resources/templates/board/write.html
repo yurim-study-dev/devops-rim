@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>스프링 게시판 - 새 글 쓰기</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/write.css">
+</head>
+<body>
+  <div class="container">
+    <th:block th:replace="~{layout/common :: nav-header(${postForm.id == 0} ? '게시글 등록' : '게시글 수정')}">
+      <h1>게시글 등록</h1>
+      <div class="nav">
+        <a href="list">목록으로</a>
+        <a href="write">새 글 쓰기</a>
+      </div>
+    </th:block>
+
+    <form th:action="@{{action}(action=${postForm.id == 0} ? 'write' : 'edit')}" method="POST" enctype="multipart/form-data" th:object="${postForm}">
+      <input type="hidden" th:field="*{id}">
+      <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
+        <div class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">에러 메시지</div>
+      </div>
+
+
+
+      <div class="form-group">
+        <label for="content">내용</label>
+        <textarea id="content" th:field="*{content}" rows="10" placeholder="내용을 입력하세요" required></textarea>
+        <div class="field-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">에러 메시지</div>
+      </div>
+
+      <div class="form-group">
+        <label for="file">첨부파일</label>
+        <input type="file" id="file" th:field="*{file}">
+        <div th:if="${postForm.originalFilename != null}" style="font-size: 0.9em; color: #666; margin-top: 5px;">
+          기존 파일: <span th:text="${postForm.originalFilename}">파일명.txt</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="secret">비밀글 설정</label>
+        <label style="font-weight: normal; cursor: pointer; display: inline-block;">
+          <input type="checkbox" id="secret" th:field="*{secret}" style="width: auto; vertical-align: middle; margin-right: 5px;"> 비밀글로 설정
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn" th:text="${postForm.id == 0} ? '등록' : '수정'">등록</button>
+        <a th:href="@{list}" class="btn btn-secondary">취소</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

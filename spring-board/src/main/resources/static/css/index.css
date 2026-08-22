@@ -1,0 +1,28 @@
+.welcome-card {
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 50px;
+}
+
+.welcome-card p {
+  font-size: 1.1em;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.btn-lg {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.15);
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-lg:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}

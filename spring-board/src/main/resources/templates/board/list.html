@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>스프링 게시판 - 목록</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+  <div class="container">
+    <th:block th:replace="~{layout/common :: nav-header('게시글 목록')}">
+      <h1>게시글 목록</h1>
+      <div class="nav">
+        <a href="list">목록으로</a>
+        <a href="write">새 글 쓰기</a>
+      </div>
+    </th:block>
+
+    <div class="search-box">
+      <form th:action="@{/post/list}" method="get">
+        <select name="type">
+          <option value="title" th:selected="${type == 'title'}">제목</option>
+          <option value="content" th:selected="${type == 'content'}">내용</option>
+          <option value="author" th:selected="${type == 'author'}">작성자</option>
+          <option value="titleContent" th:selected="${type == 'titleContent' || type == null}">제목+내용</option>
+        </select>
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="검색어를 입력하세요">
+        <button type="submit" class="btn btn-secondary">검색</button>
+      </form>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일시</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr th:each="post : ${posts}">
+          <td th:text="${post.id}">3</td>
+          <td>
+            <a th:unless="${post.isSecret}" th:href="@{detail(id=${post.id})}" th:text="${post.title}">게시글 제목 샘플</a>
+            <span th:if="${post.isSecret}">비밀글입니다.</span>
+          </td>
+          <td th:text="${post.author}">작성자3</td>
+          <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2026-07-13 15:30:00</td>
+          <td>
+            <form th:if="${session.loginMember != null and (session.loginMember.id == post.memberId or session.loginMember.role == 'admin')}"
+                  th:action="@{delete(id=${post.id})}" method="POST">
+              <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
+            </form>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <!-- 이전 페이지 버튼 -->
+      <a th:if="${pageResponse.hasPrev}"
+         th:href="@{/post/list(page=${pageResponse.page - 1}, type=${type}, keyword=${keyword})}">&laquo; 이전</a>
+      <span th:unless="${pageResponse.hasPrev}" class="disabled">&laquo; 이전</span>
+
+      <!-- 페이지 번호 목록 -->
+      <th:block th:each="p : ${#numbers.sequence(pageResponse.startPage, pageResponse.endPage)}">
+        <a th:if="${p != pageResponse.page}"
+           th:href="@{/post/list(page=${p}, type=${type}, keyword=${keyword})}"
+           th:text="${p}">1</a>
+        <span th:if="${p == pageResponse.page}" class="active" th:text="${p}">1</span>
+      </th:block>
+
+      <!-- 다음 페이지 버튼 -->
+      <a th:if="${pageResponse.hasNext}"
+         th:href="@{/post/list(page=${pageResponse.page + 1}, type=${type}, keyword=${keyword})}">다음 &raquo;</a>
+      <span th:unless="${pageResponse.hasNext}" class="disabled">다음 &raquo;</span>
+    </div>
+  </div>
+</body>
+</html>

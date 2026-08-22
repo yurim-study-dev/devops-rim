@@ -1,0 +1,25 @@
+DROP TABLE IF EXISTS post CASCADE;
+
+DROP TABLE IF EXISTS member CASCADE;
+
+CREATE TABLE member (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    role VARCHAR(20) DEFAULT 'user' NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE post (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id INT,
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
+    secret BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    original_filename VARCHAR(255),
+    store_filename VARCHAR(255),
+    content_type VARCHAR(5000),
+    CONSTRAINT fk_post_member FOREIGN KEY (member_id) REFERENCES member(id)
+);
